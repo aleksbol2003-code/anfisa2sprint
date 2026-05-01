@@ -73,10 +73,20 @@ class IceCream(PublishedModel):
         verbose_name='На главную',
         help_text='Отмечает мороженое для показа на главной странице'
         )
+    output_order = models.PositiveSmallIntegerField(
+        null=True,
+        default=100,
+        verbose_name='Порядок отображения'
+    )
+    price = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
     class Meta:
         verbose_name = 'Мороженое'
         verbose_name_plural = 'Мороженое'
+        # Сначала сортируем по полю output_order, 
+        # а если у нескольких объектов значения output_order совпадают--
+        # сортируем по title.
+        ordering = ['output_order', 'title']
 
     def __str__(self):
         return self.title
