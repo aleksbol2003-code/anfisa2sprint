@@ -7,6 +7,7 @@ class Category(PublishedModel):
     title = models.CharField(max_length=256, verbose_name='Название')
     slug = models.SlugField(max_length=64, unique=True, verbose_name='Слаг')
     output_order = models.PositiveSmallIntegerField(
+        null=True,
         default=100,
         verbose_name='Порядок отображения'
     )
@@ -14,6 +15,7 @@ class Category(PublishedModel):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+        ordering = ['output_order', 'title']
 
     def __str__(self):
         return self.title
@@ -60,11 +62,17 @@ class IceCream(PublishedModel):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        related_name='ice_creams',
+        related_name='ice_cream',
         verbose_name='Категория'
     )
-    toppings = models.ManyToManyField(Topping, verbose_name='Топпинги')
-    is_on_main = models.BooleanField(default=False, verbose_name='На главную')
+    toppings = models.ManyToManyField(
+        Topping, verbose_name='Топпинги', related_name='ice_cream'
+        )
+    is_on_main = models.BooleanField(
+        default=False,
+        verbose_name='На главную',
+        help_text='Отмечает мороженое для показа на главной странице'
+        )
 
     class Meta:
         verbose_name = 'Мороженое'
